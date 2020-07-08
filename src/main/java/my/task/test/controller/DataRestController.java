@@ -4,9 +4,11 @@ import my.task.test.exceptions.DataAlreadyExistException;
 import my.task.test.exceptions.DataNotFoundException;
 import my.task.test.service.DataService;
 
-import org.apache.commons.codec.binary.StringUtils;
+import static java.nio.charset.StandardCharsets.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.util.logging.Logger;
 
@@ -27,44 +29,44 @@ public class DataRestController {
 		return dataService.getData("A");
 	}
 
-	@GetMapping("/data")
+	@GetMapping(value = "/data", produces = "text/plain;charset=UTF-8")
 	public String getData(@RequestParam() String key) {
 
 		if (key.equals(null))
 			throw new RuntimeException("Key is Null");
 
-		String value = dataService.getData(key);
+		String value = dataService.getData(toUTF(key));
 
-		if (value.contentEquals(null))
+		if (value.equals(null))
 			throw new DataNotFoundException("Data key not found - " + toUTF(key));
 
-		logger.info("Key: " + toUTF(key) + " for value: " + toUTF(value));
-		return value;
+		logger.info("Returned key: " + toUTF(key) + " for value: " + toUTF(value));
+		return toUTF(value);
 	}
 
-	@PostMapping("/data")
+	@PostMapping(value = "/data", produces = "text/plain;charset=UTF-8")
 	public String addData(@RequestParam() String key, @RequestParam() String value) {
 
 		if (key.equals(null))
 			throw new RuntimeException("Key is Null");
 
-		if (dataService.getData(key) != null) {
+		if (dataService.getData(toUTF(key)) != null) {
 			throw new DataAlreadyExistException("Data key already exist - " + toUTF(key));
 		}
 
 		dataService.saveData(toUTF(key), toUTF(value));
 
-		logger.info("Key: " + toUTF(key) + " for value: " + toUTF(value));
-		return value;
+		logger.info("Returned key: " + toUTF(key) + " for value: " + toUTF(value));
+		return toUTF(value);
 	}
 
-	@PutMapping("/data")
+	@PutMapping(value = "/data", produces = "text/plain;charset=UTF-8")
 	public void updateData(@RequestParam() String key, @RequestParam() String value) {
 
 		if (key.equals(null))
 			throw new RuntimeException("Key is Null");
 
-		if (dataService.getData(key) == null) {
+		if (dataService.getData(toUTF(key)) == null) {
 			throw new DataNotFoundException("Data key not found - " + toUTF(key));
 		}
 
@@ -72,13 +74,13 @@ public class DataRestController {
 
 	}
 
-	@DeleteMapping("/data")
+	@DeleteMapping(value = "/data", produces = "text/plain;charset=UTF-8")
 	public void deleteData(@RequestParam() String key) {
 
 		if (key.equals(null))
 			throw new RuntimeException("Key is Null");
 
-		if (dataService.getData(key) == null) {
+		if (dataService.getData(toUTF(key)) == null) {
 			throw new DataNotFoundException("Data key not found - " + toUTF(key));
 		}
 
@@ -88,9 +90,13 @@ public class DataRestController {
 
 	private String toUTF(String notUtf8String) {
 
-		byte[] bytes = StringUtils.getBytesUtf8(notUtf8String);
+		byte[] ptext = notUtf8String.getBytes(); 
+		
+		String value = new String(ptext, UTF_8); 
+		
+		logger.info(value);
 
-		return StringUtils.newStringUtf8(bytes);
+		return value;
 
 	}
 }
