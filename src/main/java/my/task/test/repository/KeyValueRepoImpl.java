@@ -2,8 +2,10 @@ package my.task.test.repository;
 
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
+@Profile("dev")
 @Repository
 public class KeyValueRepoImpl implements KeyValueRepo {
 

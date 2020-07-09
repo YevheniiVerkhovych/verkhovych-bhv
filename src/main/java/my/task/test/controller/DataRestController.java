@@ -21,24 +21,16 @@ public class DataRestController {
 	@Autowired
 	private DataService dataService;
 
-	@GetMapping("/test")
-	public String test() {
-
-		dataService.saveData("A", "Aaaaaaaaaaa");
-
-		return dataService.getData("A");
-	}
-
 	@GetMapping("/data")
 	public String getData(@RequestParam() String key) {
 
 		if (key.equals(null))
 			throw new RuntimeException("Key is Null");
 
-		String value = dataService.getData(toUTF(key));
-
-		if (value.equals(null))
+		if (dataService.getData(toUTF(key)) == null)
 			throw new DataNotFoundException("Data key not found - " + toUTF(key));
+
+		String value = dataService.getData(toUTF(key));
 
 		logger.info("Returned key: " + toUTF(key) + " for value: " + toUTF(value));
 		return toUTF(value);

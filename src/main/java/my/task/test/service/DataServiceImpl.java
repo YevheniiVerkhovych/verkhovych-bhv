@@ -12,26 +12,27 @@ public class DataServiceImpl implements DataService {
 	private KeyValueRepo dataDAO;
 
 	@Override
-	public void saveData(String key, String value) {
-		// TODO Auto-generated method stub
-		dataDAO.saveData(key, value);
-	}
-
-	@Override
 	public String getData(String key) {
-		// TODO Auto-generated method stub
+
 		return dataDAO.getData(key);
 	}
 
 	@Override
-	public void deleteData(String key) {
-		dataDAO.deleteData(key);
+	public void saveData(String key, String value) {
 
+		dataDAO.saveData(key, value);
 	}
 
 	@Override
 	public void updateData(String key, String value) {
-		// TODO Auto-generated method stub
+
 		dataDAO.updateData(key, value);
+	}
+
+	@Override
+	public void deleteData(String key) {
+
+		dataDAO.deleteData(key);
+
 	}
 }
