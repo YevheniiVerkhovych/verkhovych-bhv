@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 @ComponentScan("my.task.test")
-public class DemoAppConfig implements WebMvcConfigurer {
+public class DataAppConfig implements WebMvcConfigurer {
 
 //	@Bean
 //	public Map<String, String> myDataSource() {

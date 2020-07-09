@@ -14,6 +14,8 @@ public class InMemoryStorage {
 
 		Map<String, String> myMap = new HashMap<>();
 
+		myMap.put("A","sdfsdfsfsf66");
+
 		return myMap;
 	}
 

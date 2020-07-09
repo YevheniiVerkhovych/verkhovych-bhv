@@ -29,7 +29,7 @@ public class DataRestController {
 		return dataService.getData("A");
 	}
 
-	@GetMapping(value = "/data", produces = "text/plain;charset=UTF-8")
+	@GetMapping("/data")
 	public String getData(@RequestParam() String key) {
 
 		if (key.equals(null))
@@ -44,7 +44,7 @@ public class DataRestController {
 		return toUTF(value);
 	}
 
-	@PostMapping(value = "/data", produces = "text/plain;charset=UTF-8")
+	@PostMapping("/data")
 	public String addData(@RequestParam() String key, @RequestParam() String value) {
 
 		if (key.equals(null))
@@ -60,8 +60,8 @@ public class DataRestController {
 		return toUTF(value);
 	}
 
-	@PutMapping(value = "/data", produces = "text/plain;charset=UTF-8")
-	public void updateData(@RequestParam() String key, @RequestParam() String value) {
+	@PutMapping("/data")
+	public String updateData(@RequestParam() String key, @RequestParam() String value) {
 
 		if (key.equals(null))
 			throw new RuntimeException("Key is Null");
@@ -72,9 +72,10 @@ public class DataRestController {
 
 		dataService.updateData(toUTF(key), toUTF(value));
 
+		return toUTF(value);
 	}
 
-	@DeleteMapping(value = "/data", produces = "text/plain;charset=UTF-8")
+	@DeleteMapping("/data")
 	public void deleteData(@RequestParam() String key) {
 
 		if (key.equals(null))
