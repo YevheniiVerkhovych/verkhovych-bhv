@@ -22,74 +22,44 @@ public class DataRestController {
 	private DataService dataService;
 
 	@GetMapping("/data")
-	public String getData(@RequestParam() String key) {
-
-		if (key.equals(null))
-			throw new RuntimeException("Key is Null");
-
-		if (dataService.getData(toUTF(key)) == null)
-			throw new DataNotFoundException("Data key not found - " + toUTF(key));
-
+	public String getData(@RequestParam String key) {
+		notNull(key);
 		String value = dataService.getData(toUTF(key));
-
-		logger.info("Returned key: " + toUTF(key) + " for value: " + toUTF(value));
-		return toUTF(value);
+		logger.info("Returned key: " + toUTF(key) + " for value: " + value);
+		return value;
 	}
 
 	@PostMapping("/data")
-	public String addData(@RequestParam() String key, @RequestParam() String value) {
-
-		if (key.equals(null))
-			throw new RuntimeException("Key is Null");
-
-		if (dataService.getData(toUTF(key)) != null) {
-			throw new DataAlreadyExistException("Data key already exist - " + toUTF(key));
-		}
-
-		dataService.saveData(toUTF(key), toUTF(value));
-
+	public String addData(@RequestParam String key, @RequestParam String value) {
+		notNull(key);
+		String valueAdded = dataService.saveData(toUTF(key), toUTF(value));
 		logger.info("Returned key: " + toUTF(key) + " for value: " + toUTF(value));
-		return toUTF(value);
+		return valueAdded;
 	}
 
 	@PutMapping("/data")
-	public String updateData(@RequestParam() String key, @RequestParam() String value) {
-
-		if (key.equals(null))
-			throw new RuntimeException("Key is Null");
-
-		if (dataService.getData(toUTF(key)) == null) {
-			throw new DataNotFoundException("Data key not found - " + toUTF(key));
-		}
-
-		dataService.updateData(toUTF(key), toUTF(value));
-
-		return toUTF(value);
+	public String updateData(@RequestParam String key, @RequestParam String value) {
+		notNull(key);
+		String valueUpdated = dataService.updateData(toUTF(key), toUTF(value));
+		return valueUpdated;
 	}
 
 	@DeleteMapping("/data")
-	public void deleteData(@RequestParam() String key) {
-
-		if (key.equals(null))
-			throw new RuntimeException("Key is Null");
-
-		if (dataService.getData(toUTF(key)) == null) {
-			throw new DataNotFoundException("Data key not found - " + toUTF(key));
-		}
-
+	public void deleteData(@RequestParam String key) {
+		notNull(key);
 		dataService.deleteData(toUTF(key));
+	}
 
+	private void notNull(String key){
+		if(key == null) {
+			throw new RuntimeException("String key can't be Null");
+		}
 	}
 
 	private String toUTF(String notUtf8String) {
-
-		byte[] ptext = notUtf8String.getBytes(); 
-		
-		String value = new String(ptext, UTF_8); 
-		
+		byte[] text = notUtf8String.getBytes();
+		String value = new String(text, UTF_8);
 		logger.info(value);
-
 		return value;
-
 	}
 }

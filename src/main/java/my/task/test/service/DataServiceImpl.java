@@ -1,5 +1,7 @@
 package my.task.test.service;
 
+import my.task.test.exceptions.DataAlreadyExistException;
+import my.task.test.exceptions.DataNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,30 +11,43 @@ import my.task.test.repository.KeyValueRepo;
 public class DataServiceImpl implements DataService {
 
 	@Autowired
-	private KeyValueRepo dataDAO;
+	private KeyValueRepo keyValueRepo;
 
 	@Override
 	public String getData(String key) {
-
-		return dataDAO.getData(key);
+		valueNull(key);
+		return keyValueRepo.getData(key);
 	}
 
 	@Override
-	public void saveData(String key, String value) {
-
-		dataDAO.saveData(key, value);
+	public String saveData(String key, String value) {
+		valueNotNull(key);
+		keyValueRepo.saveData(key, value);
+		return keyValueRepo.getData(key);
 	}
 
 	@Override
-	public void updateData(String key, String value) {
-
-		dataDAO.updateData(key, value);
+	public String updateData(String key, String value) {
+		valueNull(key);
+		keyValueRepo.updateData(key, value);
+		return keyValueRepo.getData(key);
 	}
 
 	@Override
 	public void deleteData(String key) {
+		valueNull(key);
+		keyValueRepo.deleteData(key);
+	}
 
-		dataDAO.deleteData(key);
+	private void valueNull(String key){
+		if (keyValueRepo.getData(key) == null) {
+			throw new DataNotFoundException("Data key not found - " + key);
+		}
+	}
 
+	private void valueNotNull(String key){
+		if (keyValueRepo.getData(key) != null) {
+			throw new DataAlreadyExistException("Data key already exist - " + key);
+		}
 	}
 }

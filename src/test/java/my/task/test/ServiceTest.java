@@ -1,5 +1,7 @@
 package my.task.test;
 
+import my.task.test.exceptions.DataNotFoundException;
+import my.task.test.repository.KeyValueRepo;
 import my.task.test.repository.KeyValueRepoImpl;
 import my.task.test.service.DataServiceImpl;
 import org.junit.Before;
@@ -11,12 +13,17 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ActiveProfiles;
 
 import static junit.framework.TestCase.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ActiveProfiles("dev")
 public class ServiceTest {
 
+    private final static String KEY = "T";
+
     @Mock
-    private KeyValueRepoImpl repoImpl;
+    private KeyValueRepo repoImpl;
 
     @InjectMocks
     private DataServiceImpl servceImpl;
@@ -27,28 +34,35 @@ public class ServiceTest {
     }
 
     @Test
-    public void getExistData() {
+    public void getExistDataCorrectValueExpected() {
 
-        Mockito.when(repoImpl.getData("T")).thenReturn("Test");
+        when(repoImpl.getData(KEY)).thenReturn("Test");
 
-        assertEquals("Test", servceImpl.getData("T"));
+        assertEquals("Test", servceImpl.getData(KEY));
+
+        when(servceImpl.getData(null))
+                .thenThrow(new DataNotFoundException());
+
+//        servceImpl.getData("T");
+//
+//        verify(repoImpl).getData("T");
     }
 
-    @Test
-    public void getNotExistData() {
-
-        Mockito.when(repoImpl.getData("T")).thenReturn(null);
-
-        assertNull(servceImpl.getData("T"));
-    }
+//    @Test
+//    public void getNotExistData_NullReturnExpected() {
+//
+//        when(repoImpl.getData("T")).thenReturn(null);
+//
+//
+//        //verify(repoImpl).getData("T");
+//    }
 
 //    @Test
 //    public void saveData() {
 //
-//        Mockito.verify(repoImpl.saveData("T", "Thomson"), times(1));
+//       when(repoImpl.saveData("T")).thenReturn("Test");
 //
-//        verify(mock, only()).someMethod("no other method has been called on the mock");
-//
+//       verify(repoImpl).getData(KEY);
 //
 //    }
 //
