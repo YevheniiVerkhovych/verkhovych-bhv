@@ -1,58 +1,43 @@
 package my.task.test;
-import my.task.test.config.DataAppConfig;
-import org.junit.Assert;
+import my.task.test.controller.DataRestController;
+import my.task.test.service.DataService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockServletContext;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import javax.servlet.ServletContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { DataAppConfig.class })
-@WebAppConfiguration
-@ActiveProfiles("dev")
+
+@RunWith(MockitoJUnitRunner.class)
 public class RestControllerTest {
 
-    @Autowired
-    private WebApplicationContext wac;
+
+    @Mock
+    private DataService dataService;
+
+    @InjectMocks
+    private DataRestController dataRestController;
 
     private MockMvc mockMvc;
 
     @Before
-    public void setup() throws Exception {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        this.mockMvc = MockMvcBuilders.standaloneSetup(dataRestController).build();
     }
 
-    @Before
-    public void addDataKeyValueForTesting() throws Exception {
-        this.mockMvc.perform(post("/api/data")
-                .param("key", "J")
-                .param("value", "John Doe"))
-                .andDo(print());
-    }
-
-    @Test
-    public void givenWac_whenServletContext_thenItProvidesDataRestController() {
-        ServletContext servletContext = wac.getServletContext();
-        Assert.assertNotNull(servletContext);
-        Assert.assertTrue(servletContext instanceof MockServletContext);
-        Assert.assertNotNull(wac.getBean("dataRestController"));
-    }
 
     @Test
     public void getRequestWithParameter_PassedIfValueExists() throws Exception {
-                this.mockMvc.perform(get("/api/data")
+        this.mockMvc.perform(get("/api/data")
                 .param("key", "J"))
                 .andExpect(content().string("John Doe"))
                 .andDo(print());

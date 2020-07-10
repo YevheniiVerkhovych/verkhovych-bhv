@@ -13,13 +13,13 @@ public class KeyValueRepoImpl implements KeyValueRepo {
 	private Map<String, String> myDataSource;
 
 	@Override
-	public void saveData(String key, String value) {
-		myDataSource.put(key, value);
+	public String getData(String key) {
+		return myDataSource.get(key);
 	}
 
 	@Override
-	public String getData(String key) {
-		return myDataSource.get(key);
+	public void saveData(String key, String value) {
+		myDataSource.put(key, value);
 	}
 
 	@Override

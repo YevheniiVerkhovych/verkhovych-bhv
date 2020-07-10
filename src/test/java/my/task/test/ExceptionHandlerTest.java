@@ -30,6 +30,7 @@ public class ExceptionHandlerTest {
 
     @Before
     public void setup() throws Exception {
+
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
     }
 

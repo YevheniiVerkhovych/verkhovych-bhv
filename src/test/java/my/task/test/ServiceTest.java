@@ -1,19 +1,16 @@
 package my.task.test;
 
+import my.task.test.exceptions.DataAlreadyExistException;
 import my.task.test.exceptions.DataNotFoundException;
 import my.task.test.repository.KeyValueRepo;
-import my.task.test.repository.KeyValueRepoImpl;
 import my.task.test.service.DataServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ActiveProfiles;
-
 import static junit.framework.TestCase.*;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
@@ -21,12 +18,13 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 public class ServiceTest {
 
     private final static String KEY = "T";
+    private final static String VALUE = "Test";
 
     @Mock
     private KeyValueRepo repoImpl;
 
     @InjectMocks
-    private DataServiceImpl servceImpl;
+    private DataServiceImpl serviceImpl;
 
     @Before
     public void setup() {
@@ -34,54 +32,60 @@ public class ServiceTest {
     }
 
     @Test
-    public void getExistDataCorrectValueExpected() {
-
-        when(repoImpl.getData(KEY)).thenReturn("Test");
-
-        assertEquals("Test", servceImpl.getData(KEY));
-
-        when(servceImpl.getData(null))
-                .thenThrow(new DataNotFoundException());
-
-//        servceImpl.getData("T");
-//
-//        verify(repoImpl).getData("T");
+    public void getExistsDataCorrectValueExpected() {
+        when(repoImpl.getData(KEY)).thenReturn(VALUE);
+        assertNotNull(serviceImpl.getData(KEY));
+        assertEquals(VALUE, serviceImpl.getData(KEY));
+        verify(repoImpl, times(4)).getData(KEY);
     }
 
-//    @Test
-//    public void getNotExistData_NullReturnExpected() {
-//
-//        when(repoImpl.getData("T")).thenReturn(null);
-//
-//
-//        //verify(repoImpl).getData("T");
-//    }
+    @Test(expected = DataNotFoundException.class)
+    public void getNotExistsDataExceptionThrown() {
+        when(repoImpl.getData(anyString())).thenReturn(null);
+        serviceImpl.getData(KEY);
+    }
+    @Test
+    public void saveExistsDataCorrectValueExpected() {
+        when(repoImpl.getData(KEY)).thenReturn(null).thenReturn(VALUE);
+        assertEquals(VALUE, serviceImpl.saveData(KEY, VALUE));
+        verify(repoImpl, times(2)).getData(KEY);
+        verify(repoImpl, times(1)).saveData(KEY, VALUE);
+    }
 
-//    @Test
-//    public void saveData() {
-//
-//       when(repoImpl.saveData("T")).thenReturn("Test");
-//
-//       verify(repoImpl).getData(KEY);
-//
-//    }
-//
-//    @Test
-//    public void updateData() {
-//
-//        Mockito.when(repoImpl.getData("T")).thenReturn("Test");
-//
-//        assertEquals("Test", servceImpl.getData("T"));
-//
-//    }
-//
-//    @Test
-//    public void deleteData() {
-//
-//        Mockito.when(repoImpl.deleteData("T")).thenReturn("Test");
-//
-//        assertEquals("Test", servceImpl.getData("T"));
-//
-//    }
+    @Test(expected = DataAlreadyExistException.class)
+    public void saveDataExistsExceptionThrown() {
+        when(repoImpl.getData(anyString())).thenReturn(VALUE);
+        serviceImpl.saveData(KEY, VALUE);
+    }
+
+    @Test
+    public void updateExistsDataCorrectValueExpected() {
+        when(repoImpl.getData(KEY)).thenReturn(VALUE).thenReturn(VALUE + "A");
+
+        assertEquals(VALUE + "A", serviceImpl.updateData(KEY, VALUE + "A"));
+
+        verify(repoImpl, times(2)).getData(KEY);
+        verify(repoImpl, times(1)).updateData(anyString(), anyString());
+    }
+
+    @Test(expected = DataNotFoundException.class)
+    public void updateDataNotExistsExceptionThrown() {
+        when(repoImpl.getData(anyString())).thenReturn(null);
+        serviceImpl.updateData(KEY, VALUE);
+    }
+
+    @Test
+    public void deleteExistsDataCorrectValueExpected() {
+        when(repoImpl.getData(KEY)).thenReturn(VALUE);
+        serviceImpl.deleteData(KEY);
+        verify(repoImpl, times(1)).getData(KEY);
+        verify(repoImpl, times(1)).deleteData(anyString());
+    }
+
+    @Test(expected = DataNotFoundException.class)
+    public void deleteDataNotExistsExceptionThrown() {
+        when(repoImpl.getData(anyString())).thenReturn(null);
+        serviceImpl.deleteData(KEY);
+    }
 
 }
