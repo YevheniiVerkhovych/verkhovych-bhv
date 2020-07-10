@@ -1,7 +1,6 @@
 target/
 [Dd]esktop.ini
 $RECYCLE.BIN/
-# Windows shortcuts
 *.lnk
 .DS_Store
-
+*target

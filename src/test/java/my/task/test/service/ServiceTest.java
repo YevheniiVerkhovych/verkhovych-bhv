@@ -1,9 +1,8 @@
-package my.task.test;
-
+package my.task.test.service;
 import my.task.test.exceptions.DataAlreadyExistException;
 import my.task.test.exceptions.DataNotFoundException;
 import my.task.test.repository.KeyValueRepo;
-import my.task.test.service.DataServiceImpl;
+import my.task.test.service.KeyValueServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -25,7 +24,7 @@ public class ServiceTest {
     private KeyValueRepo repoImpl;
 
     @InjectMocks
-    private DataServiceImpl serviceImpl;
+    private KeyValueServiceImpl serviceImpl;
 
     @Before
     public void setup() {

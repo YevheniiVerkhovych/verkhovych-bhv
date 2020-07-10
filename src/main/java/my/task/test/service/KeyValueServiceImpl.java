@@ -8,13 +8,9 @@ import org.springframework.stereotype.Service;
 import my.task.test.repository.KeyValueRepo;
 
 @Service
-public class DataServiceImpl implements DataService {
+public class KeyValueServiceImpl implements KeyValueService {
 
 	@Autowired
-	public DataServiceImpl(KeyValueRepo keyValueRepo) {
-		this.keyValueRepo = keyValueRepo;
-	}
-
 	private KeyValueRepo keyValueRepo;
 
 	@Override

@@ -1,6 +1,6 @@
-package my.task.test;
-import my.task.test.controller.Controller;
-import my.task.test.service.DataService;
+package my.task.test.controller;
+import my.task.test.controller.KeyValueController;
+import my.task.test.service.KeyValueService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,61 +20,64 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class ControllerTest {
-    private final static String KEY = "M";
-    private final static String VALUE = "Mark Twain";
+public class KeyValueControllerTest {
+    private final static String KEY = "key";
+    private final static String VALUE = "value";
+    private final static String KEY_STRING = "M";
+    private final static String VALUE_STRING = "Mark Twain";
+    private final static String PATH = "/api/data";
 
     @Mock
-    private DataService dataService;
+    private KeyValueService keyValueService;
 
     @InjectMocks
-    private Controller controller;
+    private KeyValueController keyValueController;
 
     private MockMvc mockMvc;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(keyValueController).build();
     }
 
     @Test
     public void getRequestWithParameter_PassedIfValueExists() throws Exception {
-        when(dataService.getData(KEY)).thenReturn(VALUE);
-        this.mockMvc.perform(get("/api/data")
-                .param("key", KEY))
-                .andExpect(content().string(VALUE))
+        when(keyValueService.getData(KEY_STRING)).thenReturn(VALUE_STRING);
+        this.mockMvc.perform(get(PATH)
+                .param(KEY, KEY_STRING))
+                .andExpect(content().string(VALUE_STRING))
                 .andDo(print());
-        verify(dataService).getData(KEY);
+        verify(keyValueService).getData(KEY_STRING);
     }
 
 
     @Test
     public void postRequestWithParameters_PassedIfStatusOKANDReturnedValueCorresponds() throws Exception {
-        when(dataService.saveData(KEY, VALUE)).thenReturn(VALUE);
-        this.mockMvc.perform(post("/api/data")
-                .param("key", KEY)
-                .param("value", VALUE))
-                .andExpect(content().string(VALUE))
+        when(keyValueService.saveData(KEY_STRING, VALUE_STRING)).thenReturn(VALUE_STRING);
+        this.mockMvc.perform(post(PATH)
+                .param(KEY, KEY_STRING)
+                .param(VALUE, VALUE_STRING))
+                .andExpect(content().string(VALUE_STRING))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
 
     @Test
     public void putRequestWithParameter_PassedIfValueReturnedAndStatusIsOK() throws Exception {
-        when(dataService.updateData(KEY, VALUE)).thenReturn(VALUE);
-        this.mockMvc.perform(put("/api/data")
-                .param("key", KEY)
-                .param("value", VALUE))
-                .andExpect(content().string(VALUE))
+        when(keyValueService.updateData(KEY_STRING, VALUE_STRING)).thenReturn(VALUE_STRING);
+        this.mockMvc.perform(put(PATH)
+                .param(KEY, KEY_STRING)
+                .param(VALUE, VALUE_STRING))
+                .andExpect(content().string(VALUE_STRING))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
 
     @Test
     public void deleteRequestWithParameter_PassedIfStatusIsOK() throws Exception {
-        this.mockMvc.perform(delete("/api/data")
-                .param("key", KEY))
+        this.mockMvc.perform(delete(PATH)
+                .param(KEY, KEY_STRING))
                 .andExpect(status().isOk())
                 .andDo(print());
     }

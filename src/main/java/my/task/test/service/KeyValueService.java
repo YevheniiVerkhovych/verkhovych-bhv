@@ -1,6 +1,6 @@
 package my.task.test.service;
 
-public interface DataService {
+public interface KeyValueService {
 
 	public String saveData(String key, String value);
 

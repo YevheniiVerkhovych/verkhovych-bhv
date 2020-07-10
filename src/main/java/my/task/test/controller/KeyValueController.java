@@ -1,10 +1,7 @@
 package my.task.test.controller;
 
-import my.task.test.exceptions.DataAlreadyExistException;
-import my.task.test.exceptions.DataNotFoundException;
-import my.task.test.service.DataService;
+import my.task.test.service.KeyValueService;
 
-import static java.nio.charset.StandardCharsets.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,17 +11,17 @@ import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api")
-public class Controller {
+public class KeyValueController {
 
 	private Logger logger = Logger.getLogger(getClass().getName());
 
 	@Autowired
-	private DataService dataService;
+	private KeyValueService keyValueService;
 
 	@GetMapping("/data")
 	public String getData(@RequestParam String key) {
 		notNull(key);
-		String value = dataService.getData(toUTF(key));
+		String value = keyValueService.getData(toUTF(key));
 		logger.info("Returned key: " + toUTF(key) + " for value: " + value);
 		return value;
 	}
@@ -32,7 +29,7 @@ public class Controller {
 	@PostMapping("/data")
 	public String addData(@RequestParam String key, @RequestParam String value) {
 		notNull(key);
-		String valueAdded = dataService.saveData(toUTF(key), toUTF(value));
+		String valueAdded = keyValueService.saveData(toUTF(key), toUTF(value));
 		logger.info("Returned key: " + toUTF(key) + " for value: " + toUTF(value));
 		return valueAdded;
 	}
@@ -40,14 +37,14 @@ public class Controller {
 	@PutMapping("/data")
 	public String updateData(@RequestParam String key, @RequestParam String value) {
 		notNull(key);
-		String valueUpdated = dataService.updateData(toUTF(key), toUTF(value));
+		String valueUpdated = keyValueService.updateData(toUTF(key), toUTF(value));
 		return valueUpdated;
 	}
 
 	@DeleteMapping("/data")
 	public void deleteData(@RequestParam String key) {
 		notNull(key);
-		dataService.deleteData(toUTF(key));
+		keyValueService.deleteData(toUTF(key));
 	}
 
 	private void notNull(String key){
