@@ -22,6 +22,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @ActiveProfiles("dev")
 public class ExceptionHandlerTest {
+
+    private final static String KEY_FIRST = "T";
+    private final static String VALUE_FIRST = "Tom Sawyer";
+    private final static String KEY_SECOND = "J";
+    private final static String VALUE_SECOND = "James Gosling";
     private final static String NSTRING = null;
 
     @Autowired
@@ -31,48 +36,43 @@ public class ExceptionHandlerTest {
 
     @Before
     public void setup() throws Exception {
-
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         this.mockMvc.perform(post("/api/data")
-                .param("key", "J")
-                .param("value", "John Doe"))
+                .param("key", KEY_FIRST)
+                .param("value", VALUE_FIRST))
                 .andDo(print());
     }
 
     @Test
     public void getRequestWithWrongParameter_PassedIfStatusIsNotFound() throws Exception {
-
         this.mockMvc.perform(get("/api/data")
-                .param("key", "Y"))
+                .param("key", KEY_SECOND))
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
 
     @Test
     public void postRequestWithExistingParameter_PassedIfStatusIsConflict() throws Exception {
-
         this.mockMvc.perform(post("/api/data")
-                .param("key", "J")
-                .param("value", "John Doe"))
+                .param("key", KEY_FIRST)
+                .param("value", VALUE_FIRST))
                 .andExpect(status().isConflict())
                 .andDo(print());
     }
 
     @Test
     public void putRequestWithWrongParameter_PassedIfStatusIsNotFound() throws Exception {
-
         this.mockMvc.perform(put("/api/data")
-                .param("key", "Z")
-                .param("value", "Tom Sawyer"))
+                .param("key", KEY_SECOND)
+                .param("value", VALUE_SECOND))
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
 
     @Test
     public void deleteRequestWithWrongParameter_PassedIfStatusIsNotFound() throws Exception {
-
         this.mockMvc.perform(delete("/api/data")
-                .param("key", "X"))
+                .param("key", KEY_SECOND))
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
@@ -80,13 +80,11 @@ public class ExceptionHandlerTest {
     @Test
     public void deleteRequestWithNullParameter_PassedIfStatusIsBadRequest() throws Exception {
         String nString = null;
-
         this.mockMvc.perform(delete("/api/data")
                 .param("key", NSTRING))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
     }
-
 }
 
 

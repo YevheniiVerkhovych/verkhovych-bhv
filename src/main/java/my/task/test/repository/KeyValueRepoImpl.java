@@ -1,16 +1,16 @@
 package my.task.test.repository;
 
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 @Profile("dev")
 @Repository
 public class KeyValueRepoImpl implements KeyValueRepo {
-
-	@Autowired
-	private Map<String, String> myDataSource;
+	Map<String, String> myDataSource = new HashMap<>();
 
 	@Override
 	public String getData(String key) {
@@ -33,7 +33,5 @@ public class KeyValueRepoImpl implements KeyValueRepo {
 	public void deleteData(String key) {
 		myDataSource.remove(key);
 	}
-
-
 
 }
