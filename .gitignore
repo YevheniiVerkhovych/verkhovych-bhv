@@ -1,5 +1,7 @@
+target/
+[Dd]esktop.ini
+$RECYCLE.BIN/
+# Windows shortcuts
 *.lnk
 .DS_Store
-.iml
-.project
-.classpath
+
