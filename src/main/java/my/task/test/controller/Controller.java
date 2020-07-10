@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api")
-public class DataRestController {
+public class Controller {
 
 	private Logger logger = Logger.getLogger(getClass().getName());
 

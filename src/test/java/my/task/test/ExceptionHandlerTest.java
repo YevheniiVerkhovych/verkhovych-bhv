@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @ActiveProfiles("dev")
 public class ExceptionHandlerTest {
+    private final static String NSTRING = null;
 
     @Autowired
     private WebApplicationContext wac;
@@ -32,10 +33,6 @@ public class ExceptionHandlerTest {
     public void setup() throws Exception {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-    }
-
-    @Before
-    public void before1() throws Exception {
         this.mockMvc.perform(post("/api/data")
                 .param("key", "J")
                 .param("value", "John Doe"))
@@ -85,7 +82,7 @@ public class ExceptionHandlerTest {
         String nString = null;
 
         this.mockMvc.perform(delete("/api/data")
-                .param("key", nString))
+                .param("key", NSTRING))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
     }

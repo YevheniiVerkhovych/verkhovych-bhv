@@ -11,6 +11,10 @@ import my.task.test.repository.KeyValueRepo;
 public class DataServiceImpl implements DataService {
 
 	@Autowired
+	public DataServiceImpl(KeyValueRepo keyValueRepo) {
+		this.keyValueRepo = keyValueRepo;
+	}
+
 	private KeyValueRepo keyValueRepo;
 
 	@Override
@@ -22,15 +26,13 @@ public class DataServiceImpl implements DataService {
 	@Override
 	public String saveData(String key, String value) {
 		valueNotNull(key);
-		keyValueRepo.saveData(key, value);
-		return keyValueRepo.getData(key);
+		return keyValueRepo.saveData(key, value);
 	}
 
 	@Override
 	public String updateData(String key, String value) {
 		valueNull(key);
-		keyValueRepo.updateData(key, value);
-		return keyValueRepo.getData(key);
+		return keyValueRepo.updateData(key, value);
 	}
 
 	@Override

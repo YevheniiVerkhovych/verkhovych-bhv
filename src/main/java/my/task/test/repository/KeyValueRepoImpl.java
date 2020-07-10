@@ -18,8 +18,15 @@ public class KeyValueRepoImpl implements KeyValueRepo {
 	}
 
 	@Override
-	public void saveData(String key, String value) {
+	public String saveData(String key, String value) {
 		myDataSource.put(key, value);
+		return value;
+	}
+
+	@Override
+	public String updateData(String key, String value) {
+		myDataSource.replace(key, value);
+		return value;
 	}
 
 	@Override
@@ -27,9 +34,6 @@ public class KeyValueRepoImpl implements KeyValueRepo {
 		myDataSource.remove(key);
 	}
 
-	@Override
-	public void updateData(String key, String value) {
-		myDataSource.replace(key, value);
-	}
+
 
 }

@@ -19,6 +19,7 @@ public class ServiceTest {
 
     private final static String KEY = "T";
     private final static String VALUE = "Test";
+    private final static String NEWVALUE = "TestUpdated";
 
     @Mock
     private KeyValueRepo repoImpl;
@@ -46,9 +47,10 @@ public class ServiceTest {
     }
     @Test
     public void saveExistsDataCorrectValueExpected() {
-        when(repoImpl.getData(KEY)).thenReturn(null).thenReturn(VALUE);
+        when(repoImpl.getData(KEY)).thenReturn(null);
+        when(repoImpl.saveData(KEY, VALUE)).thenReturn(VALUE);
         assertEquals(VALUE, serviceImpl.saveData(KEY, VALUE));
-        verify(repoImpl, times(2)).getData(KEY);
+        verify(repoImpl, times(1)).getData(KEY);
         verify(repoImpl, times(1)).saveData(KEY, VALUE);
     }
 
@@ -60,11 +62,10 @@ public class ServiceTest {
 
     @Test
     public void updateExistsDataCorrectValueExpected() {
-        when(repoImpl.getData(KEY)).thenReturn(VALUE).thenReturn(VALUE + "A");
-
-        assertEquals(VALUE + "A", serviceImpl.updateData(KEY, VALUE + "A"));
-
-        verify(repoImpl, times(2)).getData(KEY);
+        when(repoImpl.getData(KEY)).thenReturn(VALUE);
+        when(repoImpl.updateData(KEY, NEWVALUE)).thenReturn(NEWVALUE);
+        assertEquals(NEWVALUE, serviceImpl.updateData(KEY, NEWVALUE));
+        verify(repoImpl, times(1)).getData(KEY);
         verify(repoImpl, times(1)).updateData(anyString(), anyString());
     }
 
