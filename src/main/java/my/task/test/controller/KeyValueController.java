@@ -29,6 +29,7 @@ public class KeyValueController {
 	@PostMapping("/data")
 	public String addData(@RequestParam String key, @RequestParam String value) {
 		notNull(key);
+		notNull(value);
 		logger.info("Returned key: " + toUTF(key) + " for value: " + toUTF(value));
 		return keyValueService.saveData(toUTF(key), toUTF(value));
 	}
@@ -36,6 +37,7 @@ public class KeyValueController {
 	@PutMapping("/data")
 	public String updateData(@RequestParam String key, @RequestParam String value) {
 		notNull(key);
+		notNull(value);
 		return keyValueService.updateData(toUTF(key), toUTF(value));
 	}
 
@@ -45,9 +47,9 @@ public class KeyValueController {
 		keyValueService.deleteData(toUTF(key));
 	}
 
-	private void notNull(String key){
-		if(key == null) {
-			throw new RuntimeException("String key can't be Null");
+	private void notNull(String str){
+		if(str == null) {
+			throw new RuntimeException("String key or value can't be Null");
 		}
 	}
 
