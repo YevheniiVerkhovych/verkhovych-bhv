@@ -2,7 +2,6 @@ package my.task.test.service;
 import my.task.test.exceptions.DataAlreadyExistException;
 import my.task.test.exceptions.DataNotFoundException;
 import my.task.test.repository.KeyValueRepo;
-import my.task.test.service.KeyValueServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -18,7 +17,7 @@ public class KeyValueServiceTest {
 
     private final static String KEY = "T";
     private final static String VALUE = "Test";
-    private final static String NEWVALUE = "TestUpdated";
+    private final static String NEW_VALUE = "TestUpdated";
 
     @Mock
     private KeyValueRepo repoImpl;
@@ -62,8 +61,8 @@ public class KeyValueServiceTest {
     @Test
     public void updateExistsDataCorrectValueExpected() {
         when(repoImpl.getData(KEY)).thenReturn(VALUE);
-        when(repoImpl.updateData(KEY, NEWVALUE)).thenReturn(NEWVALUE);
-        assertEquals(NEWVALUE, serviceImpl.updateData(KEY, NEWVALUE));
+        when(repoImpl.updateData(KEY, NEW_VALUE)).thenReturn(NEW_VALUE);
+        assertEquals(NEW_VALUE, serviceImpl.updateData(KEY, NEW_VALUE));
         verify(repoImpl, times(1)).getData(KEY);
         verify(repoImpl, times(1)).updateData(anyString(), anyString());
     }
