@@ -14,7 +14,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ActiveProfiles("dev")
-public class ServiceTest {
+public class KeyValueServiceTest {
 
     private final static String KEY = "T";
     private final static String VALUE = "Test";

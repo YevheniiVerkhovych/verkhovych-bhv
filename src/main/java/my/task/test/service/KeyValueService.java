@@ -2,12 +2,12 @@ package my.task.test.service;
 
 public interface KeyValueService {
 
-	public String saveData(String key, String value);
+	 String saveData(String key, String value);
 
-	public String getData(String key);
+	 String getData(String key);
 
-	public void deleteData(String key);
+	 void deleteData(String key);
 	
-	public String updateData(String key, String value);
+	 String updateData(String key, String value);
 	
 }

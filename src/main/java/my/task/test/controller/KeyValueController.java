@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 @RequestMapping("/api")
 public class KeyValueController {
 
-	private Logger logger = Logger.getLogger(getClass().getName());
+	private final Logger logger = Logger.getLogger(getClass().getName());
 
 	@Autowired
 	private KeyValueService keyValueService;
@@ -29,16 +29,14 @@ public class KeyValueController {
 	@PostMapping("/data")
 	public String addData(@RequestParam String key, @RequestParam String value) {
 		notNull(key);
-		String valueAdded = keyValueService.saveData(toUTF(key), toUTF(value));
 		logger.info("Returned key: " + toUTF(key) + " for value: " + toUTF(value));
-		return valueAdded;
+		return keyValueService.saveData(toUTF(key), toUTF(value));
 	}
 
 	@PutMapping("/data")
 	public String updateData(@RequestParam String key, @RequestParam String value) {
 		notNull(key);
-		String valueUpdated = keyValueService.updateData(toUTF(key), toUTF(value));
-		return valueUpdated;
+		return keyValueService.updateData(toUTF(key), toUTF(value));
 	}
 
 	@DeleteMapping("/data")
